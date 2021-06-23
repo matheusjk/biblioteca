@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron p-3">
+                <h2> Autores <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal">Adicionar novos autores </button></h2>
+            </div>
+
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for mensagens in messages %}
+                        <div class="alert alert-success alert-dismissable" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                                <span aria-hidden="true">x</span>
+                            </button>
+                            {{ mensagens }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <table class="table table-hover table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Profissão</th>
+                    <th>Email</th>
+                    <th>Endereço</th>
+                    <th>Açoes</th>
+                </tr>
+
+
+                {% for linhas in autores %}
+                    <tr>
+
+                        <td>{{ linhas.id }}</td>
+                        <td>{{ linhas.nome }}</td>
+                        <td>{{ linhas.profissao }}</td>
+                        <td>{{ linhas.email }}</td>
+                        <td>{{ linhas.endereco }}</td>
+
+                        <td>
+                            <a href="/alterarAutor/{{ linhas.id }}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{ linhas.id }}">Editar</a>
+                            <a href="excluirAutor/{{ linhas.id }}" class="btn btn-danger tbn-xs" onclick="return confirm('Deseja realmente deletar o autor??')">Excluir</a>
+                        </td>
+                    </tr>
+
+                    <div id="modaledit{{linhas.id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Alterar Autor </h4>
+                                </div>
+
+                                <div class="modal-body">
+                                    <form action="{{url_for('autor.alterarAutor')}}" method="POST">
+                                        <div class="form-group">
+                                            <label>Nome</label>
+                                            <input type="hidden" name="id" value="{{ linhas.id }}">
+                                            <input type="text" class="form-control" name="nome" value="{{ linhas.nome }}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Profissão</label>
+                                            <input type="text" class="form-control" name="profissao" value="{{ linhas.profissao }}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input type="email" class="form-control" name="email" value="{{ linhas.email }}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Endereco</label>
+                                            <input type="text" class="form-control" name="endereco" value="{{ linhas.endereco }}">
+                                        </div>
+
+                                        <div class="form-group pt-2">
+                                            <button class="btn btn-primary" type="submit">Alterar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div id="mymodal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"> Adicionar Autor </h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <form action="{{ url_for('autor.inserirAutor') }}" method="POST">
+                            <div class="form-group">
+                                <label> Nome: </label>
+                                <input type="text" class="form-control" name="nome" required="1">
+                            </div>
+
+                            <div class="form-group">
+                                <label> Profissão: </label>
+                                <input type="text" class="form-control" name="profissao" required="1">
+                            </div>
+
+                            <div class="form-group">
+                                <label> Email: </label>
+                                <input type="email" class="form-control" name="email" required="1">
+                            </div>
+
+                            <div class="form-group">
+                                <label> Endereço: </label>
+                                <input type="endereco" class="form-control" name="endereco" required="1">
+                            </div>
+
+                            <div class="form-group pt-2">
+                                <button class="btn btn-primary" type="submit">Adicionar Autor</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

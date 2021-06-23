@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+
+    {% with mensagens = get_flashed_messages() %}
+            {% if mensagens %}
+               {% for mensagem in mensagens %}
+
+                    <div class="container">
+                        <div class="row fixed-top col-auto d-flex justify-content-end">
+                            <div class="col-md-4">
+                                <div class="border border-success alert alert-success alert-dismissable fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h5>{{ mensagem }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               {% endfor %}
+            {% endif %}
+    {% endwith %}
+
+
+
+<div class="container">
+    <div class="row">
+          <div class="col-md-12">
+
+              <div class="jumbotron p-3">
+                  <h2> Emprestimos <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal"><span class="oi oi-plus"></span> Adicionar novo emprestimo</button> </h2>
+              </div>
+
+              <table class="table table-hover table-dark" id="tabela">
+                  <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Usuario</th>
+                          <th>Livro</th>
+                          <th>Data Emprestimo</th>
+                          <th>Data Devolução</th>
+                      </tr>
+                  </thead>
+
+                  <tbody>
+                      {% for l in emprestimo %}
+                           <tr>
+                               <td>{{ l.id }}</td>
+                               <td>{{ l.user.nome }}</td>
+                               <td>{{ l.Livros.titulo }}</td>
+                               <td>{{ l.dataEmprestimo }}</td>
+                               <td>{{ l.dataDevolucao }}</td>
+
+                               <td>
+                                   <a href="/alterar/{{l.id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{l.id}}"><span class="oi oi-pencil"></span> Editar</a>
+                                   <a href="/deletar/{{l.id}}" class="btn btn-danger btn-xs" onclick="return confirm('Deseja realmente deletar o item?')"><span class="oi oi-trash"></span> Deletar</a>
+                               </td>
+                           </tr>
+                  </tbody>
+
+                      <div id="modaledit{{l.id}}" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h4 class="modal-title">Alterar informação </h4>
+                                  </div>
+
+                                  <div class="modal-body">
+                                      <form action="{{url_for('alterarEmprestimo')}}" method="POST">
+                                          <input type="hidden" name="id" value="{{ l.id }}">
+                                          <label>Livro: </label>
+                                               <select class="form-control" name="titulo" readonly>
+                                                   {% for linhas in livro %}
+                                                       <option value="{{ linhas.id }}"  {% if linhas.id == l.Livros.id %} selected="selected" {% endif %}>
+                                                            {{ linhas.titulo }}
+                                                       </option>
+                                                   {% endfor %}
+                                               </select>
+
+                                          <label>Nome Usuario: </label>
+                                               <select class="form-control" name="nomeUsuario" readonly>
+                                                   {% for linhas in usuarios %}
+                                                       <option value="{{ linhas.id }}"  {% if linhas.id == l.user.id %} selected="selected" {% endif %}>
+                                                            {{ linhas.nome }}
+                                                       </option>
+                                                   {% endfor %}
+                                               </select>
+
+                                          <div class="form-group">
+                                              <label> Data Devolução: </label>
+                                              <input type="text" class="form-control" name="dataDevolucao" value="{{ l.dataDevolucao }}" readonly>
+                                          </div>
+
+                                          <div class="form-group pt-2">
+                                              <button class="btn btn-primary" type="submit">Alterar</button>
+                                          </div>
+
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  {% endfor %}
+              </table>
+          </div>
+
+        <div id="mymodal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+                   <div class="modal-content">
+                       <div class="modal-header">
+                           <h4 class="modal-title">Adicionar Emprestimo</h4>
+                       </div>
+
+                       <div class="modal-body">
+                           <form action="{{url_for('inserirEmprestimo')}}" method="POST">
+                                <label>Nome Usuario: </label>
+                                <select class="form-control" name="nomeUsuario">
+                                       {% for linhas in usuarios %}
+                                          <option value="{{ linhas.id }}">{{ linhas.nome }}</option>
+                                       {% endfor %}
+                                </select>
+
+                               <label>Livro: </label>
+                               <select class="form-control" name="titulo">
+                                   {% for linhas in livro %}
+                                        <option value="{{ linhas.id}}"> {{ linhas.titulo }}</option>
+                                   {% endfor %}
+                               </select>
+
+                                <div class="form-group pt-2">
+                                    <button class="btn btn-primary" type="submit">Confirmar </button>
+                                </div>
+                           </form>
+                        </div>
+
+                       <div class="modal-footer">
+                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                       </div>
+                   </div>
+              </div>
+        </div>
+
+<!--        <img src="{{grafico}}" class="img-fluid" alt="Responsive image">-->
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" type="image/svg+xml" src="{{grafico}}" allowfullscreen></iframe>
+        </div>
+
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+
+{% block footer %}
+
+<footer class="footer mt-auto py-3">
+    <div class="container">
+        <span class="text-muted">Versão do Sistema 1.0 &copy; </span>
+    </div>
+</footer>
+
+{% endblock %}
