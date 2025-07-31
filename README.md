@@ -66,3 +66,29 @@
 ## 
 
 
+<h4> TELA EDITORA </h4>
+
+<img src="Captura de tela de 2025-07-30 23-28-56.png">
+
+<p> Na tela de Editora o usuario podera efetuar o cadastro de uma ou mais editoras além de realizar as seguintes açoes abaixo. </p>
+
+<ul>
+
+<li> Editar Editora </li>
+<li> Deletar Editora </li>
+
+</ul>
+
+## 
+
+
+<h4> Preencher com IA </h4>
+
+<img src="Captura de tela de 2025-07-30 23-32-11.png">
+
+<p> Na tela de livros o botão "Preencher com IA" basicamente pegamos o ISBN da capa dado uma foto subida pelo usuário passamos na API do Groq e batemos esse registro na API https://brasilapi.com.br/docs#tag/ISBN tendo o livro na base o registramos aqui estamos trabalhando ainda na construção do serviço de Agente apartado. Construindo uma arquitetura. </p>
+
+
+## 
+
+
